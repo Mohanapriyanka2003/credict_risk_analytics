@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CreditShield AI | Credit Risk & Expected Credit Loss (ECL) Analytics</title>
+    <!-- Modern Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- ChartJS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="dark-theme">
+    
+    <!-- Premium Glowing Background Spheres -->
+    <div class="glow-sphere sphere-1"></div>
+    <div class="glow-sphere sphere-2"></div>
+    
+    <!-- Navbar -->
+    <header class="navbar-wrapper">
+        <nav class="navbar container">
+            <div class="nav-logo" id="logo_credit_shield">
+                <i class="fa-solid fa-shield-halved logo-icon"></i>
+                <span class="logo-text">CreditShield<span class="logo-highlight">.AI</span></span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#portfolio_section" class="nav-link active" id="nav_portfolio"><i class="fa-solid fa-chart-pie"></i> Portfolio Overview</a></li>
+                <li><a href="#scorer_section" class="nav-link" id="nav_scorer"><i class="fa-solid fa-sliders"></i> Loan Underwriter</a></li>
+                <li><a href="#stress_section" class="nav-link" id="nav_stress"><i class="fa-solid fa-circle-nodes"></i> Stress-Testing Lab</a></li>
+                <li><a href="#fairness_section" class="nav-link" id="nav_fairness"><i class="fa-solid fa-balance-scale"></i> Fairness Auditor</a></li>
+            </ul>
+            <div class="nav-meta">
+                <span class="status-indicator-live">Live Connection</span>
+                <span class="system-time"><i class="fa-regular fa-clock"></i> 2026-05-25</span>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-content container">
+
+        <!-- SECTION 1: PORTFOLIO SUMMARY -->
+        <section id="portfolio_section" class="section-card active">
+            <div class="section-header">
+                <div class="title-area">
+                    <h1 class="main-title">Credit Risk & Expected Credit Loss Analytics</h1>
+                    <p class="subtitle">IFRS 9 & CECL Regulatory Reporting Console (German Credit Portfolio)</p>
+                </div>
+                <div class="action-area">
+                    <button class="btn btn-secondary" id="btn_refresh_portfolio"><i class="fa-solid fa-arrows-rotate"></i> Sync Core Database</button>
+                </div>
+            </div>
+
+            <!-- Portfolio Metric Cards -->
+            <div class="metrics-grid">
+                <div class="metric-card glass-panel" id="card_portfolio_exposure">
+                    <div class="metric-header">
+                        <span class="metric-label">Total Portfolio Exposure</span>
+                        <div class="metric-icon-wrapper blue"><i class="fa-solid fa-coins"></i></div>
+                    </div>
+                    <div class="metric-value" id="val_portfolio_exposure">DM --</div>
+                    <div class="metric-subtext"><span class="trend-neutral"><i class="fa-solid fa-database"></i> SQLite relational DB</span></div>
+                </div>
+
+                <div class="metric-card glass-panel" id="card_portfolio_ecl">
+                    <div class="metric-header">
+                        <span class="metric-label">Baseline Expected Credit Loss (ECL)</span>
+                        <div class="metric-icon-wrapper purple"><i class="fa-solid fa-shield-catastrophe"></i></div>
+                    </div>
+                    <div class="metric-value ecl-glow" id="val_portfolio_ecl">DM --</div>
+                    <div class="metric-subtext"><span class="trend-up" id="val_ecl_pct">ECL/Exposure Ratio: --%</span></div>
+                </div>
+
+                <div class="metric-card glass-panel" id="card_avg_pd">
+                    <div class="metric-header">
+                        <span class="metric-label">Portfolio Average PD</span>
+                        <div class="metric-icon-wrapper orange"><i class="fa-solid fa-wave-square"></i></div>
+                    </div>
+                    <div class="metric-value" id="val_portfolio_pd">--%</div>
+                    <div class="metric-subtext"><span class="trend-down"><i class="fa-solid fa-circle-check"></i> Standardized PD classifier</span></div>
+                </div>
+
+                <div class="metric-card glass-panel" id="card_avg_lgd">
+                    <div class="metric-header">
+                        <span class="metric-label">Portfolio Average LGD</span>
+                        <div class="metric-icon-wrapper green"><i class="fa-solid fa-chart-line-down"></i></div>
+                    </div>
+                    <div class="metric-value" id="val_portfolio_lgd">--%</div>
+                    <div class="metric-subtext"><span class="trend-neutral"><i class="fa-solid fa-vault"></i> Collateral-backed recoveries</span></div>
+                </div>
+            </div>
+
+            <!-- Portfolio Visualizers -->
+            <div class="dashboard-grid">
+                <div class="chart-container glass-panel">
+                    <h3 class="chart-title"><i class="fa-solid fa-chart-bar icon-margin"></i> Exposure by Credit Purpose</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="chart_purpose"></canvas>
+                    </div>
+                </div>
+                <div class="chart-container glass-panel">
+                    <h3 class="chart-title"><i class="fa-solid fa-triangle-exclamation icon-margin"></i> Risk Distribution by Credit Tier</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="chart_risk"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: LOAN SCORER & ECL SIMULATOR -->
+        <section id="scorer_section" class="section-card">
+            <div class="section-header">
+                <div class="title-area">
+                    <h2>AI-Driven Credit Underwriter & ECL Simulator</h2>
+                    <p class="subtitle">Evaluate and price individual loan applications under the regulatory ML pipeline</p>
+                </div>
+            </div>
+
+            <div class="scorer-layout-grid">
+                <!-- Inputs config panel -->
+                <form class="config-panel glass-panel" id="frm_borrower_config" onsubmit="return false;">
+                    <h3 class="panel-header"><i class="fa-solid fa-id-card icon-margin"></i> Borrower Profile Configurator</h3>
+
+                    <!-- checking balance -->
+                    <div class="form-group">
+                        <label for="inp_status_checking">Checking Account Status</label>
+                        <select id="inp_status_checking" class="form-input">
+                            <option value="&lt; 0 DM">Negative / Balance Overdrawn (&lt; 0 DM)</option>
+                            <option value="0 to &lt; 200 DM" selected>Low Balance (0 to &lt; 200 DM)</option>
+                            <option value="&gt;= 200 DM / salary assignments">Healthy Balance (&gt;= 200 DM)</option>
+                            <option value="no checking account">No Checking Account</option>
+                        </select>
+                    </div>
+
+                    <!-- credit history -->
+                    <div class="form-group">
+                        <label for="inp_credit_history">Credit History</label>
+                        <select id="inp_credit_history" class="form-input">
+                            <option value="no credits taken">No historical credits taken / Paid duly</option>
+                            <option value="all credits paid back duly at this bank">All credits paid back duly at this bank</option>
+                            <option value="existing credits paid back duly till now" selected>Existing credits paid back duly till now</option>
+                            <option value="delay in paying off in the past">Delay in paying off in the past</option>
+                            <option value="critical account / other credits elsewhere">Critical Account / Other credits existing elsewhere</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <!-- loan amount -->
+                        <div class="form-group flex-1">
+                            <label for="inp_credit_amount">Loan Amount (DM)</label>
+                            <input type="number" id="inp_credit_amount" class="form-input" min="250" max="20000" value="4000" step="100">
+                        </div>
+                        <!-- duration -->
+                        <div class="form-group flex-1">
+                            <label for="inp_duration_months">Duration (Months)</label>
+                            <input type="number" id="inp_duration_months" class="form-input" min="6" max="72" value="24" step="1">
+                        </div>
+                    </div>
+
+                    <!-- purpose -->
+                    <div class="form-group">
+                        <label for="inp_purpose">Loan Purpose</label>
+                        <select id="inp_purpose" class="form-input">
+                            <option value="car (new)">New Car purchase</option>
+                            <option value="car (used)" selected>Used Car purchase</option>
+                            <option value="furniture/equipment">Furniture / House Equipment</option>
+                            <option value="radio/television">Radio / Television / Appliances</option>
+                            <option value="education">Education Expenses</option>
+                            <option value="business">Business Expansion</option>
+                            <option value="others">Other Purposes</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <!-- savings -->
+                        <div class="form-group flex-1">
+                            <label for="inp_savings">Savings Account Balance</label>
+                            <select id="inp_savings" class="form-input">
+                                <option value="&lt; 100 DM" selected>Low (&lt; 100 DM)</option>
+                                <option value="100 to &lt; 500 DM">Moderate (100 to &lt; 500 DM)</option>
+                                <option value="500 to &lt; 1000 DM">High (500 to &lt; 1000 DM)</option>
+                                <option value="&gt;= 1000 DM">Very High (&gt;= 1000 DM)</option>
+                                <option value="unknown / no savings account">Unknown / None</option>
+                            </select>
+                        </div>
+                        <!-- housing -->
+                        <div class="form-group flex-1">
+                            <label for="inp_housing">Housing Status</label>
+                            <select id="inp_housing" class="form-input">
+                                <option value="rent">Rent</option>
+                                <option value="own" selected>Own Housing</option>
+                                <option value="for free">For Free (Provided)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- property -->
+                    <div class="form-group">
+                        <label for="inp_property">Collateral Property Type</label>
+                        <select id="inp_property" class="form-input">
+                            <option value="real estate">Real Estate (Highest security)</option>
+                            <option value="building society savings agreement/life insurance">Life Insurance / Savings agreement</option>
+                            <option value="car or other" selected>Car or other movable assets (Moderate security)</option>
+                            <option value="no property / unknown">No Property / Unsecured</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <!-- age -->
+                        <div class="form-group flex-1">
+                            <label for="inp_age">Age (Years)</label>
+                            <input type="number" id="inp_age" class="form-input" min="18" max="80" value="28">
+                        </div>
+                        <!-- sex -->
+                        <div class="form-group flex-1">
+                            <label for="inp_sex">Gender (Sex)</label>
+                            <select id="inp_sex" class="form-input">
+                                <option value="Female" selected>Female</option>
+                                <option value="Male">Male</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Other categorical details needed for completeness -->
+                    <div class="advanced-toggle-btn" onclick="document.getElementById('adv_fields').classList.toggle('active')">
+                        <i class="fa-solid fa-gears"></i> Show Advanced Risk Parameters
+                    </div>
+
+                    <div id="adv_fields" class="advanced-fields-panel">
+                        <div class="form-row">
+                            <div class="form-group flex-1">
+                                <label for="inp_employment">Present Employment</label>
+                                <select id="inp_employment" class="form-input">
+                                    <option value="unemployed">Unemployed</option>
+                                    <option value="&lt; 1 year">&lt; 1 Year</option>
+                                    <option value="1 to &lt; 4 years" selected>1 to &lt; 4 Years</option>
+                                    <option value="4 to &lt; 7 years">4 to &lt; 7 Years</option>
+                                    <option value="&gt;= 7 years">&gt;= 7 Years</option>
+                                </select>
+                            </div>
+                            <div class="form-group flex-1">
+                                <label for="inp_job">Job Type</label>
+                                <select id="inp_job" class="form-input">
+                                    <option value="unemployed/unskilled non-resident">Unskilled / Non-resident</option>
+                                    <option value="unskilled resident">Unskilled resident</option>
+                                    <option value="skilled employee/official" selected>Skilled Employee / Official</option>
+                                    <option value="management/highly qualified/self-employed">Management / Officer</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group flex-1">
+                                <label for="inp_installment_rate">Installment Rate (% of Income)</label>
+                                <input type="number" id="inp_installment_rate" class="form-input" min="1" max="10" value="3">
+                            </div>
+                            <div class="form-group flex-1">
+                                <label for="inp_personal_status">Personal Status</label>
+                                <select id="inp_personal_status" class="form-input">
+                                    <option value="single" selected>Single</option>
+                                    <option value="divorced/separated">Divorced / Separated</option>
+                                    <option value="married/widowed">Married / Widowed</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group flex-1">
+                                <label for="inp_residence_since">Residence Since (Years)</label>
+                                <input type="number" id="inp_residence_since" class="form-input" min="1" max="10" value="2">
+                            </div>
+                            <div class="form-group flex-1">
+                                <label for="inp_existing_credits">Existing Credits Here</label>
+                                <input type="number" id="inp_existing_credits" class="form-input" min="1" max="5" value="1">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group flex-1">
+                                <label for="inp_other_installments">Other Installments Plans</label>
+                                <select id="inp_other_installments" class="form-input">
+                                    <option value="bank">Bank</option>
+                                    <option value="stores">Stores</option>
+                                    <option value="none" selected>None</option>
+                                </select>
+                            </div>
+                            <div class="form-group flex-1">
+                                <label for="inp_other_debtors">Guarantors / Other Debtors</label>
+                                <select id="inp_other_debtors" class="form-input">
+                                    <option value="none" selected>None</option>
+                                    <option value="co-applicant">Co-Applicant</option>
+                                    <option value="guarantor">Guarantor</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-primary btn-full" id="btn_run_underwriting"><i class="fa-solid fa-wand-magic-sparkles"></i> Evaluate Application</button>
+                </form>
+
+                <!-- Outputs underwriting dashboard panel -->
+                <div class="results-panel glass-panel" id="panel_results">
+                    <h3 class="panel-header"><i class="fa-solid fa-brain icon-margin"></i> AI Underwriting Decision</h3>
+                    
+                    <!-- Underwriting status card -->
+                    <div class="decision-card" id="val_decision_card">
+                        <div class="decision-icon" id="val_decision_icon"><i class="fa-solid fa-hourglass-half"></i></div>
+                        <div class="decision-details">
+                            <div class="decision-label">Underwriting Action</div>
+                            <div class="decision-value" id="val_decision_text">Awaiting Profile Evaluation</div>
+                        </div>
+                    </div>
+
+                    <!-- Risk dial & metrics -->
+                    <div class="risk-metrics-row">
+                        <!-- PD gauge representation -->
+                        <div class="pd-dial-wrapper">
+                            <div class="pd-dial-circle">
+                                <div class="pd-dial-value" id="val_pd_dial">--%</div>
+                                <div class="pd-dial-label">Probability of Default (PD)</div>
+                            </div>
+                        </div>
+
+                        <!-- LGD & EAD metrics -->
+                        <div class="ecl-breakdown-details">
+                            <div class="metric-sub-widget">
+                                <span class="widget-label">Loss Given Default (LGD)</span>
+                                <span class="widget-val" id="val_widget_lgd">--%</span>
+                                <div class="progress-bar-bg"><div class="progress-bar-fill" id="fill_widget_lgd"></div></div>
+                            </div>
+                            <div class="metric-sub-widget">
+                                <span class="widget-label">Exposure at Default (EAD)</span>
+                                <span class="widget-val" id="val_widget_ead">DM --</span>
+                            </div>
+                            <div class="metric-sub-widget border-top">
+                                <span class="widget-label glow-color">Calculated Expected Loss (ECL)</span>
+                                <span class="widget-val val-ecl" id="val_widget_ecl">DM --</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="risk-classification-bar" id="val_risk_classification">
+                        Risk Tier: <strong id="val_risk_tier">--</strong>
+                    </div>
+
+                    <!-- Business pricing recommendations -->
+                    <div class="pricing-card" id="val_pricing_card">
+                        <h4 class="pricing-header"><i class="fa-solid fa-tag"></i> Risk-Based Pricing & Compliance Analysis</h4>
+                        <ul class="pricing-details">
+                            <li><span class="detail-label">Fairness Audit Baseline:</span> <span class="detail-val" id="val_fairness_baseline">Awaiting sex/age evaluation</span></li>
+                            <li><span class="detail-label">Underwriting Risk Capital:</span> <span class="detail-val" id="val_capital_reserves">DM --</span></li>
+                            <li><span class="detail-label">Optimal Credit Rate Premium:</span> <span class="detail-val" id="val_interest_rate_premium">--%</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: STRESS-TESTING LAB -->
+        <section id="stress_section" class="section-card">
+            <div class="section-header">
+                <div class="title-area">
+                    <h2>Stress-Testing & Capital Adequacy Simulation Lab</h2>
+                    <p class="subtitle">Simulate credit portfolio performance under adverse macroeconomic shocks (IFRS 9 / CCAR)</p>
+                </div>
+            </div>
+
+            <div class="stress-layout-grid">
+                <!-- Stress configurations -->
+                <div class="stress-controls-panel glass-panel">
+                    <h3 class="panel-header"><i class="fa-solid fa-sliders icon-margin"></i> Macroeconomic Stress Knobs</h3>
+
+                    <!-- PD shock -->
+                    <div class="slider-group">
+                        <div class="slider-labels">
+                            <span class="slider-label">Probability of Default (PD) Shock</span>
+                            <span class="slider-val" id="val_slider_pd_shock">1.0x (Baseline)</span>
+                        </div>
+                        <input type="range" id="inp_slider_pd_shock" class="slider-input" min="1.0" max="2.0" value="1.0" step="0.1">
+                        <p class="slider-help">Simulates a spike in defaults due to a rise in unemployment or drop in GDP.</p>
+                    </div>
+
+                    <!-- LGD shock -->
+                    <div class="slider-group">
+                        <div class="slider-labels">
+                            <span class="slider-label">Collateral Asset Haircut (LGD Shock)</span>
+                            <span class="slider-val" id="val_slider_lgd_shock">0% (Baseline)</span>
+                        </div>
+                        <input type="range" id="inp_slider_lgd_shock" class="slider-input" min="0" max="50" value="0" step="5">
+                        <p class="slider-help">Simulates a crash in property or vehicle values, reducing recoveries and increasing LGD.</p>
+                    </div>
+
+                    <!-- Macro Scenario Presets -->
+                    <div class="presets-container">
+                        <span class="presets-title">Regulatory Scenario Presets:</span>
+                        <div class="presets-row">
+                            <button class="btn btn-preset active" id="btn_preset_baseline">Baseline</button>
+                            <button class="btn btn-preset" id="btn_preset_mild">Mild Recession</button>
+                            <button class="btn btn-preset" id="btn_preset_severe">Severe Crisis</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stress Results Visualization -->
+                <div class="stress-visualization-panel glass-panel">
+                    <h3 class="panel-header"><i class="fa-solid fa-chart-line icon-margin"></i> Stress Test Impact on Expected Loss</h3>
+
+                    <div class="stress-results-summary">
+                        <div class="stress-sum-card red-glow">
+                            <span class="sum-card-label">Stressed Expected Loss (ECL)</span>
+                            <span class="sum-card-val" id="val_stressed_total_ecl">DM --</span>
+                        </div>
+                        <div class="stress-sum-card">
+                            <span class="sum-card-label">Expected Capital Increase</span>
+                            <span class="sum-card-val" id="val_stressed_ecl_increase">+--%</span>
+                        </div>
+                    </div>
+
+                    <!-- Live updating double bar chart -->
+                    <div class="chart-wrapper height-medium">
+                        <canvas id="chart_stress_comparison"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: REGULATORY FAIRNESS AUDITOR -->
+        <section id="fairness_section" class="section-card">
+            <div class="section-header">
+                <div class="title-area">
+                    <h2>Regulatory Fairness, Bias Audit & Ethical AI</h2>
+                    <p class="subtitle">Monitor disparate impact ratios against protected groups and run real-time bias mitigation</p>
+                </div>
+            </div>
+
+            <div class="fairness-layout-grid">
+                <!-- Fairness Controls -->
+                <div class="fairness-controls-panel glass-panel">
+                    <h3 class="panel-header"><i class="fa-solid fa-scale-balanced icon-margin"></i> Ethical Bias Mitigation Console</h3>
+                    <p class="intro-paragraph">Our machine learning models show a disparate impact against the Female borrower group. Below, toggle the unprivileged group approval threshold to mitigate bias and satisfy regulatory compliance.</p>
+
+                    <!-- Mitigated threshold slider -->
+                    <div class="slider-group">
+                        <div class="slider-labels">
+                            <span class="slider-label">Female Approval Risk Threshold</span>
+                            <span class="slider-val" id="val_female_threshold_slider">PD &le; 0.35</span>
+                        </div>
+                        <input type="range" id="inp_female_threshold" class="slider-input" min="0.30" max="0.55" value="0.35" step="0.01">
+                        <p class="slider-help">Slightly increasing the default threshold limit for the unprivileged group (Female) compensates for historical credit history discrepancies.</p>
+                    </div>
+
+                    <div class="bias-remedy-card" id="val_bias_remedy_text">
+                        <i class="fa-solid fa-circle-info"></i> Adjust the risk slider to bring the Disparate Impact Ratio back into the legally acceptable compliance window (80% - 125%).
+                    </div>
+                </div>
+
+                <!-- Audit Meters -->
+                <div class="fairness-audit-panel glass-panel">
+                    <h3 class="panel-header"><i class="fa-solid fa-chart-column icon-margin"></i> Algorithmic Audit Metrics</h3>
+
+                    <div class="audit-row">
+                        <!-- Sex Audit Widget -->
+                        <div class="audit-widget">
+                            <h4 class="widget-header">Protected Attribute: Gender (Sex)</h4>
+                            <div class="di-scale-wrapper">
+                                <div class="di-scale-meter">
+                                    <div class="di-scale-bar-track">
+                                        <div class="di-scale-compliance-zone"></div>
+                                        <div class="di-scale-indicator" id="indicator_sex_di"></div>
+                                    </div>
+                                    <div class="di-scale-labels">
+                                        <span>0.0 (Unfair)</span>
+                                        <span class="center-label">0.8 (Regulatory Limit)</span>
+                                        <span>1.0 (Ideal)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <ul class="audit-stats-list">
+                                <li><span class="stat-label">Male (Privileged) Approval Rate:</span> <strong id="val_male_approval_rate">--%</strong></li>
+                                <li><span class="stat-label">Female (Unprivileged) Approval Rate:</span> <strong id="val_female_approval_rate">--%</strong></li>
+                                <li><span class="stat-label">Disparate Impact Ratio:</span> <strong class="glow-value" id="val_sex_di_ratio">--</strong></li>
+                                <li><span class="stat-label">Compliance Status:</span> <strong id="val_sex_compliance_badge" class="badge">--</strong></li>
+                            </ul>
+                        </div>
+
+                        <!-- Age Audit Widget -->
+                        <div class="audit-widget">
+                            <h4 class="widget-header">Protected Attribute: Age Group</h4>
+                            <div class="di-scale-wrapper">
+                                <div class="di-scale-meter">
+                                    <div class="di-scale-bar-track">
+                                        <div class="di-scale-compliance-zone"></div>
+                                        <div class="di-scale-indicator" id="indicator_age_di"></div>
+                                    </div>
+                                    <div class="di-scale-labels">
+                                        <span>0.0 (Unfair)</span>
+                                        <span class="center-label">0.8 (Regulatory Limit)</span>
+                                        <span>1.0 (Ideal)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <ul class="audit-stats-list">
+                                <li><span class="stat-label">Mature (&gt;30) Approval Rate:</span> <strong id="val_mature_approval_rate">--%</strong></li>
+                                <li><span class="stat-label">Young (&le;30) Approval Rate:</span> <strong id="val_young_approval_rate">--%</strong></li>
+                                <li><span class="stat-label">Disparate Impact Ratio:</span> <strong class="glow-value" id="val_age_di_ratio">--</strong></li>
+                                <li><span class="stat-label">Compliance Status:</span> <strong id="val_age_compliance_badge" class="badge">--</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer container">
+        <div class="footer-content">
+            <div class="footer-copyright">&copy; 2026 CreditShield AI. Internal Risk Management Console. Developed for Banking & Credit Portfolios.</div>
+            <div class="footer-links">
+                <a href="#logo_credit_shield" class="footer-link"><i class="fa-solid fa-arrow-up"></i> Return to Top</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
